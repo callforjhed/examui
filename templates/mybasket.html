@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Gerald L. de Guzman's Web Portfolio" />
+    <meta name="keywords" content="Software Developer" />
+    <meta name="author" content="Gerald L. de Guzman" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans|Julius+Sans+One|Michroma|Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='index.css') }}"
+    />
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Navbar</a>
+        <form
+          class="form-inline"
+          action="{{url_for('addbasket')}}"
+          method="POST"
+        >             
+          <a href="{{url_for('home')}}" class="btn btn-outline-primary">Product List</a>
+        </form>
+      </nav>
+    </div>
+
+    {% if msg: %}
+    <div class="container">
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong> {{ msg }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>      
+    </div>
+    {% endif %}
+    <div class="container mb-10">
+      <h2>My Baskets</h2>
+    </div>
+  </br></br>      
+    {% for basket in customer['baskets']: %}      
+      <div class="container"><h2>{{ basket['basketname']}}</h2></div>      
+      <div class="container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                ID
+              </th>
+              <th>
+                Product Name
+              </th>
+              <th>
+                Quantity
+              </th>
+              <th>
+                Item Price
+              </th>
+              <th>
+                Total Price
+              </th>
+              <th>
+                Action
+              </th>             
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in basket['items']:%}
+            <tr>
+              <td>{{ item['productid']}}</td>
+              <td>{{ item['productname']}}</td>
+              <td>{{ item['quantity']}}</td>
+              <td>{{ item['itemprice']}}</td>
+              <td>{{item['quantity'] * item['itemprice']}}</td>
+              <td><button type="button" class="btn btn-primary _btn">
+                Remove Item
+              </button>
+              <input type="hidden" class="_hidden" value="{{ basket['basketid'] }}"/>
+              </td>
+            </tr>            
+            {% endfor %}
+          </tbody>
+        </table> 
+        </div>       
+    {% endfor %}
+    <div class="container">
+      <h3>SUM OF ALL TOTALS : {{ total }}</h3>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script> 
+      $("._btn").click(function () {
+        var currentRow = $(this).closest("tr");
+        var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+        var col2 = currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+        var col3 = currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+        var col4 = currentRow.find("td:eq(3)").text();
+        var col5 = currentRow.find("td:eq(4)").val();
+        var col6 = currentRow.find("._hidden").val();
+        // var data = col1 + "\n" + col2 + "\n" + col3 + "\n" + col4 + "\n" + col5 + "\n" + col6;
+        // alert(data);
+        var obj = new Object();
+        obj.productid = col1;
+        obj.productname = col2;
+        obj.quantity = 1;
+        obj.itemprice = col4;
+
+        var url = "http://localhost:8080/cust/1/" + col6 + "/removeitem";
+
+        var data = JSON.stringify(obj);
+        
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: data,
+          contentType: 'application/json',
+          success: function(result){
+              alert('Item removed from basket.');
+              window.location.reload();
+          },
+          dataType: 'json',
+        });
+      });     
+    </script>
+  </body>
+</html>

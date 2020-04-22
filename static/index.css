@@ -1,0 +1,71 @@
+html {
+	scroll-behavior: smooth;
+}
+
+.masthead {
+	height: 100vh;
+	min-height: 500px;
+	background-image: url("/static/images/img1.jpeg");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	padding-top: 20px;
+}
+
+h1 {
+	color: white;
+	font-family: "Julius Sans One", sans-serif;
+	letter-spacing: 3px;
+}
+
+p {
+	color: white;
+	font-size: medium;
+	font-weight: bold;
+	font-family: "Julius Sans One", sans-serif;
+}
+
+.glass-box {
+	background-color: rgba(21, 21, 23, 0.1);
+	-webkit-box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.75);
+}
+
+.item-text {
+	color: white;
+	font-family: "Julius Sans One", sans-serif;
+	font-size: small;
+	font-weight: bold;
+}
+
+.item-text:hover {
+	color: gray;
+	font-family: "Julius Sans One", sans-serif;
+	font-size: small;
+}
+
+@media screen and (max-width: 1000px) {
+	.navbar-toggler {
+		background-color: white;
+	}
+	h1 {
+		font-size: x-large;
+		letter-spacing: 3px;
+	}
+	p {
+		font-size: small;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.navbar-toggler {
+		background-color: white;
+	}
+	h1 {
+		font-size: medium;
+		letter-spacing: 3px;
+	}
+	p {
+		font-size: x-small;
+	}
+}

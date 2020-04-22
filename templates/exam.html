@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Gerald L. de Guzman's Web Portfolio" />
+    <meta name="keywords" content="Software Developer" />
+    <meta name="author" content="Gerald L. de Guzman" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans|Julius+Sans+One|Michroma|Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='index.css') }}"
+    />
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Navbar</a>
+        <form
+          class="form-inline"
+          action="{{url_for('addbasket')}}"
+          method="POST"
+        >
+          <input
+            name="basketname"
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="Create Basket"
+            aria-label="Create Basket"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Create Basket
+          </button>&nbsp;
+          <a href="{{url_for('mybasket')}}" class="btn btn-outline-primary">My Basket</a>
+        </form>
+      </nav>
+    </div>
+
+    {% if msg: %}
+    <div class="container">
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong> {{ msg }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>      
+    </div>
+    {% endif %}
+    <div class="container">
+      <h2>Product List</h2>
+    </div>
+
+    <div class="container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              ID
+            </th>
+            <th>
+              Product Name
+            </th>
+            <th>
+              Description
+            </th>
+            <th>
+              Price
+            </th>
+            <th>
+              Action
+            </th>
+            <th>
+              Select Basket
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prod in products %}
+          <tr>
+            <td>{{ prod['productid'] }}</td>
+            <td>{{ prod['productname'] }}</td>
+            <td>{{ prod['description'] }}</td>
+            <td>{{ prod['price'] }}</td>
+            <td>
+              <button type="button" class="btn btn-primary _btn">
+                Add Item
+              </button>
+            </td>
+            <td>
+              <select class="browser-default custom-select">
+                <option selected>Open this select menu</option>
+                {% for basket in baskets['baskets']%}
+                <option value="{{ basket['basketid'] }}"
+                  >{{basket['basketname']}}</option
+                >
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $("._btn").click(function () {
+        var currentRow = $(this).closest("tr");
+        var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+        var col2 = currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+        var col3 = currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+        var col4 = currentRow.find("td:eq(3)").text();
+        var col6 = currentRow.find("option:selected").val();
+        //var data = col1 + "\n" + col2 + "\n" + col3 + "\n" + col4 + "\n" + col6;
+
+        var obj = new Object();
+        obj.productid = col1;
+        obj.productname = col2;
+        obj.quantity = 1;
+        obj.itemprice = col4;
+
+        var url = "http://localhost:8080/cust/1/" + col6 + "/additem";
+
+        var data = JSON.stringify(obj);
+        
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: data,
+          contentType: 'application/json',
+          success: function(result){
+              alert('Item added to basket.');
+              window.location.reload();
+          },
+          dataType: 'json',
+        });
+      });
+    </script>
+  </body>
+</html>
