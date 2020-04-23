@@ -40,16 +40,19 @@
       </nav>
     </div>
 
-    {% if msg: %}
     <div class="container">
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-        <strong> {{ msg }}</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <input id="msg" type="hidden" value="{{msg}}"/>
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">        
+        <!-- Message here-->
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"        >
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>      
-    </div>
-    {% endif %}
+      </div>
+    </div> 
     <div class="container mb-10">
       <h2>My Baskets</h2>
     </div>
@@ -118,6 +121,14 @@
       crossorigin="anonymous"
     ></script>
     <script> 
+      $(function(){
+        if($('#msg').val()){
+          $(".alert").html("<strong>" + $('#msg').val() + "</strong>").show();
+        }else{
+          $('.alert').hide();
+        }        
+      });
+      
       $("._btn").click(function () {
         var currentRow = $(this).closest("tr");
         var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
@@ -144,8 +155,11 @@
           data: data,
           contentType: 'application/json',
           success: function(result){
-              alert('Item removed from basket.');
-              window.location.reload();
+            $(".alert").html("<strong>Item removed from basket.</strong>").show(); 
+            window.location.reload();
+          },error: function(){
+            $(".alert").html("<strong>Item removed from basket.</strong>").show(); 
+            window.location.reload();
           },
           dataType: 'json',
         });

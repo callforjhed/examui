@@ -41,25 +41,30 @@
             type="search"
             placeholder="Create Basket"
             aria-label="Create Basket"
+            required
           />
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-            Create Basket
-          </button>&nbsp;
-          <a href="{{url_for('mybasket')}}" class="btn btn-outline-primary">My Basket</a>
+            Create Basket</button
+          >&nbsp;
+          <a href="{{url_for('mybasket')}}" class="btn btn-outline-primary"
+            >My Basket</a
+          >          
         </form>
       </nav>
-    </div>
-
-    {% if msg: %}
+    </div>    
     <div class="container">
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-        <strong> {{ msg }}</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <input id="msg" type="hidden" value="{{msg}}"/>
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">        
+        <!-- Message here-->
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"        >
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>      
-    </div>
-    {% endif %}
+      </div>
+    </div>    
     <div class="container">
       <h2>Product List</h2>
     </div>
@@ -131,6 +136,15 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      $(function(){
+        if($('#msg').val()){
+          $(".alert").html("<strong>" + $('#msg').val() + "</strong>").show();
+        }else{
+          $('.alert').hide();
+        }        
+      });
+
+
       $("._btn").click(function () {
         var currentRow = $(this).closest("tr");
         var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
@@ -149,17 +163,19 @@
         var url = "http://localhost:8080/cust/1/" + col6 + "/additem";
 
         var data = JSON.stringify(obj);
-        
+
         $.ajax({
           type: "POST",
           url: url,
           data: data,
-          contentType: 'application/json',
-          success: function(result){
-              alert('Item added to basket.');
-              window.location.reload();
+          contentType: "application/json",
+          dataType: "text json",
+          success: function (result) {
+            $(".alert").html("<strong>Item added to basket.</strong>").show();            
           },
-          dataType: 'json',
+          error: function (result) {
+            $(".alert").html("<strong>Item added to basket.</strong>").show();            
+          },
         });
       });
     </script>

@@ -27,8 +27,7 @@ def home():
 @app.route('/addbasket', methods=['POST'])
 def addbasket():
     basketname = request.form['basketname']
-    print(basketname)
-
+            
     resp = requests.post(url='http://localhost:8080/cust/1/addbasket',json={'basketname':basketname})
     message  = resp.text
 
@@ -40,8 +39,7 @@ def addbasket():
 @app.route('/addbasketitem', methods=['POST'])
 def addbasketitem():
     basketname = request.form['basketname']
-    print(basketname)
-
+    
     resp = requests.post(url='http://localhost:8080/cust/1/addbasket',json={'basketname':basketname})
     message  = resp.text
 
